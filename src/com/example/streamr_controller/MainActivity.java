@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 	private ArrayAdapter<MovieData> mAdapter;
 	private ArrayList<MovieData> mMovieList = new ArrayList<MovieData>();
 	
-	final String GET_MOVIES_URL = "http://192.168.1.127:8888/api/rest/movies_get_movies.php";
+	final String GET_MOVIES_URL = "http://10.21.30.197:8888/api/rest/movies_get_movies.php";
 	ListView listView;
 
     @Override

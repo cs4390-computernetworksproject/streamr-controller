@@ -1,5 +1,11 @@
 package com.example.streamr_controller;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import com.example.streamr_controller.objects.MovieData;
 
 import android.app.Activity;
@@ -11,6 +17,11 @@ import android.widget.TextView;
 
 
 public class PlayerActivity extends Activity {
+	// Renderer Info //////////
+	String mHost;
+	int mPort;
+	
+	
 	// Views //////////
 	private TextView mNameTextView;
 	private TextView mDirectorTextView;
@@ -79,26 +90,82 @@ public class PlayerActivity extends Activity {
         });
         
         // Have the renderer open the file.
-        commandOpenFile(mMovieData.getFile());
+		commandOpenFile(mMovieData.getFile());
     }
     
     private void commandOpenFile(String resourceUrl) {
-    	
+    	try {
+    		Socket socket = configureSocket();
+        	OutputStream outputStream = getSocketOutputStream(socket);
+        	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        	dataOutputStream.writeUTF("open");
+        	dataOutputStream.writeUTF(resourceUrl);
+        	socket.close();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     private void commandPlay() {
-    	
+    	try {
+    		Socket socket = configureSocket();
+        	OutputStream outputStream = getSocketOutputStream(socket);
+        	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        	dataOutputStream.writeUTF("play");
+        	socket.close();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     private void commandPause() {
-    	
+    	try {
+    		Socket socket = configureSocket();
+        	OutputStream outputStream = getSocketOutputStream(socket);
+        	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        	dataOutputStream.writeUTF("pause");
+        	socket.close();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     private void commandRewind() {
-    	
+    	try {
+    		Socket socket = configureSocket();
+        	OutputStream outputStream = getSocketOutputStream(socket);
+        	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        	dataOutputStream.writeUTF("rewind");
+        	socket.close();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+		
     }
     
     private void commandFastforward() {
-    	
+    	try {
+    		Socket socket = configureSocket();
+        	OutputStream outputStream = getSocketOutputStream(socket);
+        	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        	dataOutputStream.writeUTF("fastforward");
+        	socket.close();
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    private Socket configureSocket() throws UnknownHostException, IOException {
+		return new Socket(mHost, mPort);
+		
+    }
+    
+    private OutputStream getSocketOutputStream(Socket socket) throws IOException {
+		return socket.getOutputStream();
     }
 }

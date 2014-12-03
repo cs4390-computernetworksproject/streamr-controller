@@ -15,33 +15,33 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-
-public class MainActivity extends Activity {
+public class SearchActivity extends Activity {
 	private ArrayAdapter<MovieData> mAdapter;
 	private ArrayList<MovieData> mMovieList = new ArrayList<MovieData>();
 	
-	final String GET_MOVIES_URL = "http://192.168.1.127:8888/api/rest/movies_get_movies.php";
+	final String GET_MOVIES_URL = "http://192.168.1.127:8888/api/rest/movies_get_movies_by_name.php";
 	
 	// Views //////////
 	ListView mListView;
 	Button mSearchButton;
+	EditText mEditText;
 	
-
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_search);
+        
+        // Set up the text field.
+        mEditText = (EditText) findViewById(R.id.searchText);
         
         // Set up the search button.
         mSearchButton = (Button) findViewById(R.id.searchButton);
@@ -49,17 +49,16 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-				startActivity(intent);
+				getMovies(mEditText.getText().toString());
 			}
+				
         });
         
         // MY GOD THIS IS DIRTY
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        mMovieList = getMovies();
-        mAdapter = new ArrayAdapter<MovieData>(this, android.R.layout.simple_list_item_1, android.R.id.text1, mMovieList);
+        //mAdapter = new ArrayAdapter<MovieData>(SearchActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, mMovieList);
         mListView = (ListView) findViewById(R.id.list);
         
         // Assign adapter to mListView
@@ -74,20 +73,20 @@ public class MainActivity extends Activity {
             	MovieData clickedMovie = (MovieData) mListView.getItemAtPosition(position);
             	
             	// Create a new intent to start the player activity.
-            	Intent intent = new Intent(MainActivity.this, PlayerActivity.class);
+            	Intent intent = new Intent(SearchActivity.this, PlayerActivity.class);
             	intent.putExtra("movie", clickedMovie);
             	
             	// Start the activity
             	startActivity(intent);
             }
     	}); 
-    }
+	}
 
-
-    private ArrayList<MovieData> getMovies() {    	
-    	String jsonResult = performGET(GET_MOVIES_URL);
+    private void getMovies(String text) {    	
+    	String jsonResult = performGET(GET_MOVIES_URL + "?name=" + text);
     	MovieMap movieMap = new MovieMap(jsonResult);
-    	return movieMap.getMovieData();
+    	mMovieList = movieMap.getMovieData();
+    	mListView.setAdapter(new ArrayAdapter<MovieData>(SearchActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, mMovieList));
 	}
     
     /**

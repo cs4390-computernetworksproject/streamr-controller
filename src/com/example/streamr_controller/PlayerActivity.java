@@ -18,9 +18,8 @@ import android.widget.TextView;
 
 public class PlayerActivity extends Activity {
 	// Renderer Info //////////
-	String mHost;
-	int mPort;
-	
+	final String mHost = "10.0.0.1";
+	final int mPort = 8080;
 	
 	// Views //////////
 	private TextView mNameTextView;
@@ -33,6 +32,7 @@ public class PlayerActivity extends Activity {
 	
 	// Data //////////
 	private MovieData mMovieData;
+	private boolean mFileOpened = false;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,10 @@ public class PlayerActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				if (!mFileOpened) {
+					// Have the renderer open the file.
+					commandOpenFile(mMovieData.getFile());
+				}
 				commandPlay();
 			}
         });
@@ -88,9 +92,6 @@ public class PlayerActivity extends Activity {
 				commandFastforward();
 			}
         });
-        
-        // Have the renderer open the file.
-		commandOpenFile(mMovieData.getFile());
     }
     
     private void commandOpenFile(String resourceUrl) {
@@ -162,7 +163,6 @@ public class PlayerActivity extends Activity {
     
     private Socket configureSocket() throws UnknownHostException, IOException {
 		return new Socket(mHost, mPort);
-		
     }
     
     private OutputStream getSocketOutputStream(Socket socket) throws IOException {

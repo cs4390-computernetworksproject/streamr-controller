@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 public class PlayerActivity extends Activity {
 	// Renderer Info //////////
-	final String mHost = "10.0.0.1";
+	final String mHost = "192.168.0.10";
 	final int mPort = 8080;
 	
 	// Views //////////
@@ -72,6 +72,7 @@ public class PlayerActivity extends Activity {
 				if (!mFileOpened) {
 					// Have the renderer open the file.
 					commandOpenFile(mMovieData.getFile());
+					mFileOpened = true;
 				}
 				commandPlay();
 			}
@@ -95,12 +96,14 @@ public class PlayerActivity extends Activity {
     }
     
     private void commandOpenFile(String resourceUrl) {
+    	System.out.println("Open command");
     	try {
-    		Socket socket = configureSocket();
-        	OutputStream outputStream = getSocketOutputStream(socket);
+    		Socket socket = new Socket(mHost, mPort);
+        	OutputStream outputStream = socket.getOutputStream();
         	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         	dataOutputStream.writeUTF("open");
         	dataOutputStream.writeUTF(resourceUrl);
+        	dataOutputStream.close();
         	socket.close();
     	}
     	catch(Exception e) {
@@ -109,11 +112,13 @@ public class PlayerActivity extends Activity {
     }
     
     private void commandPlay() {
+    	System.out.println("Play command");
     	try {
-    		Socket socket = configureSocket();
-        	OutputStream outputStream = getSocketOutputStream(socket);
+    		Socket socket = new Socket(mHost, mPort);
+        	OutputStream outputStream = socket.getOutputStream();
         	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         	dataOutputStream.writeUTF("play");
+        	dataOutputStream.close();
         	socket.close();
     	}
     	catch(Exception e) {
@@ -122,11 +127,13 @@ public class PlayerActivity extends Activity {
     }
     
     private void commandPause() {
+    	System.out.println("Pause command");
     	try {
-    		Socket socket = configureSocket();
-        	OutputStream outputStream = getSocketOutputStream(socket);
+    		Socket socket = new Socket(mHost, mPort);
+        	OutputStream outputStream = socket.getOutputStream();
         	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         	dataOutputStream.writeUTF("pause");
+        	dataOutputStream.close();
         	socket.close();
     	}
     	catch(Exception e) {
@@ -135,11 +142,13 @@ public class PlayerActivity extends Activity {
     }
     
     private void commandRewind() {
+    	System.out.println("Rewind command");
     	try {
-    		Socket socket = configureSocket();
-        	OutputStream outputStream = getSocketOutputStream(socket);
+    		Socket socket = new Socket(mHost, mPort);
+        	OutputStream outputStream = socket.getOutputStream();
         	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         	dataOutputStream.writeUTF("rewind");
+        	dataOutputStream.close();
         	socket.close();
     	}
     	catch(Exception e) {
@@ -149,23 +158,17 @@ public class PlayerActivity extends Activity {
     }
     
     private void commandFastforward() {
+    	System.out.println("Fastforward command");
     	try {
-    		Socket socket = configureSocket();
-        	OutputStream outputStream = getSocketOutputStream(socket);
+    		Socket socket = new Socket(mHost, mPort);
+        	OutputStream outputStream = socket.getOutputStream();
         	DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
         	dataOutputStream.writeUTF("fastforward");
+        	dataOutputStream.close();
         	socket.close();
     	}
     	catch(Exception e) {
     		e.printStackTrace();
     	}
-    }
-    
-    private Socket configureSocket() throws UnknownHostException, IOException {
-		return new Socket(mHost, mPort);
-    }
-    
-    private OutputStream getSocketOutputStream(Socket socket) throws IOException {
-		return socket.getOutputStream();
     }
 }

@@ -28,7 +28,7 @@ public class SearchActivity extends Activity {
 	private ArrayAdapter<MovieData> mAdapter;
 	private ArrayList<MovieData> mMovieList = new ArrayList<MovieData>();
 	
-	final String GET_MOVIES_URL = "http://192.168.1.127:8888/api/rest/movies_get_movies_by_name.php";
+	final String GET_MOVIES_URL = "http://192.168.0.17:8888/api/rest/movies_get_movies_by_name.php";
 	
 	// Views //////////
 	ListView mListView;
